@@ -1,7 +1,10 @@
 package fantasy;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import fantasy.Player_Interface.position;
 
@@ -38,13 +41,32 @@ public class main {
 		labelmap.put("62","Yards Allowed");
 		Team Collin_team = new Team("Collin");
 		Player Trevor = new Player("Trevor Siemian", position.QB, "Starter");
+		Player Tyrod = new Player("Tyrod Taylor", position.QB, "Starter");
 		Player Michael = new Player("Michael Crabtree", position.WR, "Starter");
 		Player Cooper = new Player("Cooper Kupp", position.WR, "Bench");
 		Collin_team.addplayer(Michael);
 		Collin_team.addplayer(Trevor);
 		Collin_team.addplayer(Cooper);
+		Collin_team.addplayer(Tyrod);
 		System.out.println(Collin_team.getroster());
 		System.out.println(Collin_team.getstarters());
-		Collin_team.score();
+		try {
+			Tyrod.add_stats();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HashMap score = Tyrod.get_scores();
+		System.out.println(Arrays.asList(score));
+		Iterator it = score.entrySet().iterator();
+		int addscore =0;
+	    while (it.hasNext()) {
+	        Map.Entry pair = (Map.Entry)it.next();
+	        addscore += (int)pair.getValue();
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	    //score.put("FINAL SCORE",addscore);
+	    System.out.println("FINAL SCORE " + addscore);
+		//Collin_team.score();
 	}
 }

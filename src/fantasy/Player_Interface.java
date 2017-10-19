@@ -10,10 +10,10 @@ public interface Player_Interface {
 		String get_name();
 		position get_position();
 		HashMap get_stats(); //all stats
-		double get_stat(String stat); //particular stat
-		List get_scores(); //all scores
+		double get_stat(String stat); //particular stat 
 		double get_score(String stat); //particular score
 		double get_fscore(); //final score
+		HashMap get_scores();//all scores
 		
 		
 		

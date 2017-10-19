@@ -15,7 +15,7 @@ public class Player implements Player_Interface {
 	public position player_position;
 	public String status;
 	public HashMap labelmap;
-	public HashMap labelstat;
+	public HashMap<Integer, Integer> labelstat;
 
 	public double player_points;
 
@@ -54,15 +54,17 @@ public class Player implements Player_Interface {
 		return null;
 	}
 
-	@Override
-	public List get_scores() {
+	public HashMap get_scores() {
 		HashMap<String, Integer> labelscore = new HashMap<String, Integer>();
+		if(labelstat.containsKey(1)) {
+			labelscore.put("total",0);
+		}
 		switch (player_position) {
 		case DEF:
 			break;
 		case QB:
-			if(this.labelstat.containsKey(1)) {
-				if (this.labelstat.containsKey(3)) {
+			if(labelstat.containsKey(1)) {
+				if (labelstat.containsKey(3)) {
 					int pascomp = (int) this.labelstat.get(3);
 					if (pascomp <5){
 						labelscore.put("completions",0);}
@@ -82,10 +84,11 @@ public class Player implements Player_Interface {
 						labelscore.put("completions",20);}
 					else if (pascomp > 35) {
 						labelscore.put("completions",24);}
+					//labelscore.put("total", labelscore.get("total")+labelscore.get("completions"));
 					}
 				if (this.labelstat.containsKey(3) && this.labelstat.containsKey(2)) {
-					double pasperc = (((double) this.labelstat.get(3))/((double) this.labelstat.get(2)));
 					int pascomp = (int) this.labelstat.get(3);
+					double pasperc = ((pascomp)/((double) this.labelstat.get(2)));
 					if (pascomp < 6) labelscore.put("completion percent",0);
 					else if (pascomp >14){
 						if (pasperc < .5) labelscore.put("completion percent",0);
@@ -134,10 +137,100 @@ public class Player implements Player_Interface {
 					else if (rushat <20) labelscore.put("rush attempts",10 );
 					else if (rushat >=20) labelscore.put("rush attempts",16);
 				}
-					
+				if (this.labelstat.containsKey(14)) {
+					int rushyds = (int) this.labelstat.get(14);
+					if (rushyds <5) labelscore.put("rush yards",0);
+					else if (rushyds <20) labelscore.put("rush yards",2);
+					else if (rushyds <50) labelscore.put("rush yards",4);
+					else if (rushyds <75) labelscore.put("rush yards",6);
+					else if (rushyds <100) labelscore.put("rush yards",10);
+					else if (rushyds >=100) labelscore.put("rush yards",16);
+				}	
+				if (this.labelstat.containsKey(14)&& this.labelstat.containsKey(13)) {
+					double rushat = (double) this.labelstat.get(13);
+					double rushavg = (double) this.labelstat.get(14)/rushat;
+					if (rushat<5) labelscore.put("rush average bonus",0);
+					else if (rushavg <4) labelscore.put("rush average bonus",0);
+					else if (rushavg <7) labelscore.put("rush average bonus",2);
+					else if (rushavg <10) labelscore.put("rush average bonus",4);
+					else if (rushavg >=10) labelscore.put("rush average bonus",8);
+				}
 			}
 			break;
 		case RB:
+			if (this.labelstat.containsKey(13)) {
+				int rushat = (int) this.labelstat.get(13);
+				if (rushat <2) labelscore.put("rush attempts",0 );
+				else if (rushat <8) labelscore.put("rush attempts",2 );
+				else if (rushat <13) labelscore.put("rush attempts",8 );
+				else if (rushat <18) labelscore.put("rush attempts",12 );
+				else if (rushat <23) labelscore.put("rush attempts",16);
+				else if (rushat <28) labelscore.put("rush attempts",20 );
+				else if (rushat <33) labelscore.put("rush attempts",24 );
+				else if (rushat >=33) labelscore.put("rush attempts",30 );
+			}
+			if (this.labelstat.containsKey(14)) {
+				int rushyds = (int) this.labelstat.get(14);
+				if (rushyds <15) labelscore.put("rush yards",0);
+				else if (rushyds <40) labelscore.put("rush yards",2);
+				else if (rushyds <75) labelscore.put("rush yards",4);
+				else if (rushyds <100) labelscore.put("rush yards",8);
+				else if (rushyds <125) labelscore.put("rush yards",12);
+				else if (rushyds <150) labelscore.put("rush yards",16);
+				else if (rushyds <175) labelscore.put("rush yards",20);
+				else if (rushyds <200) labelscore.put("rush yards",24);
+				else if (rushyds >=200) labelscore.put("rush yards",30);
+			}	
+			if (this.labelstat.containsKey(14)&& this.labelstat.containsKey(13)) {
+				double rushat = (double) this.labelstat.get(13);
+				double rushavg = (double) this.labelstat.get(14)/rushat;
+				double rushapt = 0;
+				if (rushavg<2.75) rushapt =0;
+				else if (rushavg<4) rushapt =2;
+				else if (rushavg<4.5) rushapt =4;
+				else if (rushavg<5.0) rushapt =6;
+				else if (rushavg<5.5) rushapt =8;
+				else if (rushavg<6.0) rushapt =12;
+				else if (rushavg<7.0) rushapt =16;
+				else if (rushavg>=7.0) rushapt =20;
+				if (rushat<5) rushapt = rushapt/3;
+				else if (rushat < 8) rushapt = rushapt/2;
+				labelscore.put("rush average bonus",(int)rushapt); //THIS IS SET AT INTEGER AND PROBABLY SHOULDNT BE
+			}
+			if (this.labelstat.containsKey(20)) {
+				int recept = (int) this.labelstat.get(20);
+				if (recept<4) labelscore.put("receptions", 4);
+				else if (recept<6) labelscore.put("receptions", 6);
+				else if (recept<8) labelscore.put("receptions", 8);
+				else if (recept<10) labelscore.put("receptions", 12);
+				else if (recept<12) labelscore.put("receptions", 16);
+				else if (recept<15) labelscore.put("receptions", 20);
+				else if (recept>=15) labelscore.put("receptions", 24);
+			}
+			if (this.labelstat.containsKey(21)) {
+				int recepyd = (int) this.labelstat.get(21);
+				if (recepyd<7) labelscore.put("reception yards", 0);
+				else if (recepyd<20) labelscore.put("reception yards", 2);
+				else if (recepyd<40) labelscore.put("reception yards", 4);
+				else if (recepyd<60) labelscore.put("reception yards", 6);
+				else if (recepyd<80) labelscore.put("reception yards", 10);
+				else if (recepyd<100) labelscore.put("reception yards", 16);
+				else if (recepyd<150) labelscore.put("reception yards", 20);
+				else if (recepyd>=150) labelscore.put("reception yards", 24);
+			}
+			if (this.labelstat.containsKey(20) && this.labelstat.containsKey(21)) {
+				int recept = (int) this.labelstat.get(20);
+				int recepyd = (int) this.labelstat.get(21);
+				double recavg = recepyd/recept;
+				if (recept <3) labelscore.put("reception average", 0);
+				else if (recavg <4) labelscore.put("reception average", 0);
+				else if (recavg <7) labelscore.put("reception average", 2);
+				else if (recavg <10) labelscore.put("reception average", 4);
+				else if (recavg <12) labelscore.put("reception average", 6);
+				else if (recavg <15) labelscore.put("reception average", 8);
+				else if (recavg <20) labelscore.put("reception average", 12);
+				else if (recavg >=20) labelscore.put("reception average", 16);
+			}
 			break;
 		case TE:
 			break;
@@ -149,7 +242,7 @@ public class Player implements Player_Interface {
 		//2pt
 		//fumblelost
 		//rushTD
-		return (List) (Arrays.asList(labelscore));
+		return (HashMap) labelscore;
 	}
 
 	@Override
@@ -163,7 +256,7 @@ public class Player implements Player_Interface {
 	}
 
 	public void add_stats() throws IOException {
-		HashMap<String, Integer> labelstat = new HashMap<String, Integer>();
+		HashMap<Integer, Integer> labelstat = new HashMap<Integer, Integer>();
 		/*
 		 * labelstat.put("1",0); labelstat.put("2",0); labelstat.put("3",0);
 		 * labelstat.put("4",0); labelstat.put("5",0); labelstat.put("6",0);
@@ -197,8 +290,7 @@ public class Player implements Player_Interface {
 		 * }
 		 */
 
-		URL oracle = new URL(
-				"http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&season=2017&week=6&dp=0&format=json");
+		URL oracle = new URL("http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&season=2017&week=4&dp=0&format=json");
 		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
 		String inputLine;
 		inputLine = in.readLine();
@@ -209,7 +301,7 @@ public class Player implements Player_Interface {
 		sc.findInLine(playername);
 		String statln;
 		System.out.println(statln = sc.next());
-		Scanner sc2 = new Scanner(statln);
+		//Scanner sc2 = new Scanner(statln);
 		int firs;
 		String cat;
 		int val;
@@ -233,11 +325,13 @@ public class Player implements Player_Interface {
 			}
 			val = Integer.parseInt(mult2);
 			firs += 4;
-			labelstat.put(cat, val);
+			int cattt = Integer.parseInt(cat);
+			labelstat.put(cattt, val);
 
 		}
 		// statln = sc2.findInLine("stats");
 		System.out.println(Arrays.asList(labelstat));
+		this.labelstat=labelstat;
 		// System.out.println(sc2.nextByte());
 		// int i = sc.nextInt();
 		// System.out.println(i);

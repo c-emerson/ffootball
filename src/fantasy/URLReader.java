@@ -29,7 +29,7 @@ public class URLReader {
 		 */
 
 		URL oracle = new URL(
-				"http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&season=2017&week=6&dp=0&format=json");
+				"http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&week=6&season=2017&dp=0&format=json");
 		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
 		String inputLine;
 		inputLine = in.readLine();
