@@ -3,7 +3,11 @@ package fantasy;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -31,7 +35,7 @@ public class Team implements Team_Interface{
 
 	@Override
 	public ArrayList getroster() {
-		ArrayList roster_names = new ArrayList<String>();
+		ArrayList roster_names = new ArrayList<Player>();
 		for (int i = 0; i<roster.size();i++) {
 			roster_names.add(((Player) roster.get(i)).get_name());
 		}
@@ -48,10 +52,24 @@ public class Team implements Team_Interface{
 		return roster_names;
 	}
 	public void score() {
-		ArrayList roster = getroster();
+		//ArrayList roster = getroster();
 		for (int i = 0; i < roster.size();i++) {
 			try {
-				( (Player) roster.get(i)).add_stats();
+				Player playern = ( (Player) roster.get(i));
+				if(!playern.add_stats()) {
+					continue;
+				}
+				HashMap score = playern.get_scores(playern);
+				System.out.println(Arrays.asList(score));
+				Iterator it = score.entrySet().iterator();
+				int addscore = 0;
+				while (it.hasNext()) {
+					Map.Entry pair = (Map.Entry) it.next();
+					addscore += (int) pair.getValue();
+					it.remove(); // avoids a ConcurrentModificationException
+				}
+				// score.put("FINAL SCORE",addscore);
+				System.out.println("___" + playern.get_name()+" FINAL SCORE " + addscore);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

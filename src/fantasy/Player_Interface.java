@@ -13,7 +13,7 @@ public interface Player_Interface {
 		double get_stat(String stat); //particular stat 
 		double get_score(String stat); //particular score
 		double get_fscore(); //final score
-		HashMap get_scores();//all scores
+		HashMap get_scores(Player player);//all scores
 		
 		
 		
