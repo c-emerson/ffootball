@@ -22,6 +22,7 @@ public class Team implements Team_Interface{
 		roster = new ArrayList<Player>();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public boolean addplayer(Player playername) {
 		this.roster.add(playername);
 		return true;
@@ -52,7 +53,6 @@ public class Team implements Team_Interface{
 		return roster_names;
 	}
 	public void score() {
-		//ArrayList roster = getroster();
 		for (int i = 0; i < roster.size();i++) {
 			try {
 				Player playern = ( (Player) roster.get(i));
@@ -68,8 +68,8 @@ public class Team implements Team_Interface{
 					addscore += (int) pair.getValue();
 					it.remove(); // avoids a ConcurrentModificationException
 				}
-				// score.put("FINAL SCORE",addscore);
-				System.out.println("___" + playern.get_name()+" FINAL SCORE " + addscore);
+				System.out.println("    " + playern.get_name()+" FINAL SCORE " + addscore);
+				System.out.println();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -59,9 +59,7 @@ public class Player implements Player_Interface {
 
 	public HashMap get_scores(Player player) {
 		HashMap<String, Integer> labelscore = new HashMap<String, Integer>();
-		//if (labelstat.containsKey(1)) {
-		//	labelscore.put("total", 0);
-		//}
+		
 		switch (player.get_position()) {
 		case DEF:
 			if (labelstat.containsKey(1)) {
@@ -102,8 +100,9 @@ public class Player implements Player_Interface {
 						labelscore.put("Yards Allowed", 2);
 					else if (yards >= 451)
 						labelscore.put("Yards Allowed", 0);
+					String yardsper = "YARDS PER PLAY NOT AVAIL. Yards Allowed:" + yards;
+					labelscore.put(yardsper, 0);
 				}
-				labelscore.put("NO ABILITY TO GET YARDS PER PLAY", 0);
 				int sacks = 0;
 				int interceptions = 0;
 				int fumbles = 0;
@@ -588,9 +587,6 @@ public class Player implements Player_Interface {
 			}
 		}
 
-		// 2pt
-		// fumblelost
-		// rushTD
 		return (HashMap) labelscore;
 	}
 
@@ -606,19 +602,7 @@ public class Player implements Player_Interface {
 
 	public boolean add_stats() throws IOException {
 		HashMap<Integer, Integer> labelstat = new HashMap<Integer, Integer>();
-		/*
-		 * labelstat.put("1",0); labelstat.put("2",0); labelstat.put("3",0);
-		 * labelstat.put("4",0); labelstat.put("5",0); labelstat.put("6",0);
-		 * labelstat.put("7","Int"); labelstat.put("8","Sacked");
-		 * labelstat.put("13","Rush att"); labelstat.put("14","Rush Yards");
-		 * labelstat.put("15","Rush TD"); labelstat.put("20","Reception");
-		 * labelstat.put("21","Reception Yards"); labelstat.put("22","Reception TD");
-		 * labelstat.put("31","Fumble"); labelstat.put("45","Sacks");
-		 * labelstat.put("46","Interceptions"); labelstat.put("47","Fumble Recovery");
-		 * labelstat.put("49","Safeties"); labelstat.put("50","D TD");
-		 * labelstat.put("51","Blocked Kick"); labelstat.put("54","Points Allowed");
-		 * labelstat.put("62","Yards Allowed");
-		 */
+		
 
 		/*
 		 * URL oracle = new URL(
@@ -640,7 +624,7 @@ public class Player implements Player_Interface {
 		 */
 
 		URL oracle = new URL(
-				"http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&season=2017&week=5&dp=0&format=json");
+				"http://api.fantasy.nfl.com/v1/players/stats?statType=weekStats&season=2017&week=6&dp=0&format=json");
 		BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
 		String inputLine;
 		inputLine = in.readLine();
@@ -649,16 +633,20 @@ public class Player implements Player_Interface {
 		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(inputLine).useDelimiter("name");
 		if (sc.findInLine(playername)==null) {
-			//int del = playername.lastIndexOf(" ");
-			//String playernamet = playername.substring(0,del);
-			//if (sc.findInLine(playernamet)==null) {
-			System.out.println("___ERR: Could not find " + playername + " !");
+			//int space;
+			//if ((space = playername.indexOf(" "))>0) {
+			//	if((space = playername.indexOf(" ", space))>0) {
+			//		String playernamet = playername.substring(0,space);
+			//		if (sc.findInLine(playernamet)==null) {}}}
+			System.out.println("____ERROR: Could not find " + playername + "!");
 			return false;
 		}
 		String statln;
 		statln=sc.next();
+		if (playername.equals("Michael Thomas")) {//SHOULD JUST COMPARE POSITIONS
+			statln=sc.next();
+		}
 		//System.out.println(statln = sc.next());
-		// Scanner sc2 = new Scanner(statln);
 		int firs;
 		String cat;
 		int val;
@@ -686,24 +674,9 @@ public class Player implements Player_Interface {
 			labelstat.put(cattt, val);
 
 		}
-		// statln = sc2.findInLine("stats");
 		//System.out.println(Arrays.asList(labelstat)); //THIS SHOWS STATS
 		this.labelstat = labelstat;
-		// System.out.println(sc2.nextByte());
-		// int i = sc.nextInt();
-		// System.out.println(i);
 		sc.close();
-		/*HashMap score = this.get_scores();
-		System.out.println(Arrays.asList(score));
-		java.util.Iterator it = score.entrySet().iterator();
-		int addscore = 0;
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry) it.next();
-			addscore += (int) pair.getValue();
-			it.remove(); // avoids a ConcurrentModificationException
-		}
-		// score.put("FINAL SCORE",addscore);
-		System.out.println(this.get_name()+" FINAL SCORE " + addscore);*/
 		return true;
 
 	}

@@ -60,7 +60,8 @@ public class main {
 		//Collin_team.addplayer(Cooper);
 		//Collin_team.addplayer(Tyrod);
 		//System.out.println(Collin_team.getroster());
-		System.out.println(Collin_team.getstarters());
+		//System.out.println(Collin_team.getstarters()); //can print this
+		System.out.println("New Team");
 		Collin_team.score();
 		/*Player Collin[] = new Player[5];
 		Collin[0] = Michael;
